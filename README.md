@@ -11,3 +11,5 @@ This doesn't use the [bgfx example framework](https://github.com/bkaradzic/bgfx/
 ### Related links
 
 [Using the bgfx library with C++ on Ubuntu](https://www.sandeepnambiar.com/getting-started-with-bgfx/) and the associated [repository](https://github.com/gamedolphin/bgfx-sample).
+
+[Hello, bgfx!](https://dev.to/pperon/hello-bgfx-4dka)

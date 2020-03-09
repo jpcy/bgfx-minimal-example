@@ -27,12 +27,20 @@ solution "bgfx-minimal-example"
 		architecture "x86"
 	filter "platforms:x86_64"
 		architecture "x86_64"
-		
+	filter "system:macosx"
+		xcodebuildsettings {
+			["MACOSX_DEPLOYMENT_TARGET"] = "10.9",
+			["ALWAYS_SEARCH_USER_PATHS"] = "YES", -- This is the minimum version of macos we'll be able to run on
+		};
+
 function setBxCompat()
 	filter "action:vs*"
 		includedirs { path.join(BX_DIR, "include/compat/msvc") }
 	filter { "system:windows", "action:gmake" }
 		includedirs { path.join(BX_DIR, "include/compat/mingw") }
+	filter { "system:macosx" }
+		includedirs { path.join(BX_DIR, "include/compat/osx") }
+		buildoptions { "-x objective-c++" }
 end
 	
 project "helloworld"
@@ -53,6 +61,8 @@ project "helloworld"
 		links { "gdi32", "kernel32", "psapi" }
 	filter "system:linux"
 		links { "dl", "GL", "pthread", "X11" }
+	filter "system:macosx"
+		links { "QuartzCore.framework", "Metal.framework", "Cocoa.framework", "IOKit.framework", "CoreVideo.framework" }
 	setBxCompat()
 
 project "helloworld_mt"
@@ -86,11 +96,11 @@ project "bgfx"
 	{
 		path.join(BGFX_DIR, "include/bgfx/**.h"),
 		path.join(BGFX_DIR, "src/*.cpp"),
-		path.join(BGFX_DIR, "src/*.h")
+		path.join(BGFX_DIR, "src/*.h"),
 	}
 	excludes
 	{
-		path.join(BGFX_DIR, "src/amalgamated.cpp")
+		path.join(BGFX_DIR, "src/amalgamated.cpp"),
 	}
 	includedirs
 	{
@@ -109,6 +119,11 @@ project "bgfx"
 		{
 			path.join(BGFX_DIR, "src/glcontext_glx.cpp"),
 			path.join(BGFX_DIR, "src/glcontext_egl.cpp")
+		}
+	filter "system:macosx"
+		files
+		{
+			path.join(BGFX_DIR, "src/*.mm"),
 		}
 	setBxCompat()
 
@@ -196,5 +211,22 @@ project "glfw"
 			path.join(GLFW_DIR, "src/x11*.*"),
 			path.join(GLFW_DIR, "src/xkb*.*")
 		}
+	filter "system:macosx"
+		defines "_GLFW_COCOA"
+		files
+		{
+			path.join(GLFW_DIR, "src/cocoa_*.*"),
+			path.join(GLFW_DIR, "src/posix_thread.h"),
+			path.join(GLFW_DIR, "src/nsgl_context.h"),
+			path.join(GLFW_DIR, "src/egl_context.h"),
+			path.join(GLFW_DIR, "src/osmesa_context.h"),
+
+			path.join(GLFW_DIR, "src/posix_thread.c"),
+			path.join(GLFW_DIR, "src/nsgl_context.m"),
+			path.join(GLFW_DIR, "src/egl_context.c"),
+			path.join(GLFW_DIR, "src/nsgl_context.m"),
+			path.join(GLFW_DIR, "src/osmesa_context.c"),                       
+		}
+
 	filter "action:vs*"
 		defines "_CRT_SECURE_NO_WARNINGS"

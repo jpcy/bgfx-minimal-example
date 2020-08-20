@@ -83,6 +83,8 @@ project "helloworld_mt"
 		links { "gdi32", "kernel32", "psapi" }
 	filter "system:linux"
 		links { "dl", "GL", "pthread", "X11" }
+	filter "system:macosx"
+		links { "QuartzCore.framework", "Metal.framework", "Cocoa.framework", "IOKit.framework", "CoreVideo.framework" }
 	setBxCompat()
 	
 project "bgfx"

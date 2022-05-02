@@ -17,10 +17,18 @@ solution "bgfx-minimal-example"
 		platforms { "x86", "x86_64" }
 	end
 	filter "configurations:Release"
-		defines "NDEBUG"
+		defines
+		{
+			"NDEBUG",
+			"BX_CONFIG_DEBUG=0"
+		}
 		optimize "Full"
 	filter "configurations:Debug*"
-		defines "_DEBUG"
+		defines
+		{
+			"_DEBUG",
+			"BX_CONFIG_DEBUG=1"
+		}
 		optimize "Debug"
 		symbols "On"
 	filter "platforms:x86"
@@ -113,8 +121,6 @@ project "bgfx"
 		path.join(BGFX_DIR, "3rdparty/dxsdk/include"),
 		path.join(BGFX_DIR, "3rdparty/khronos")
 	}
-	filter "configurations:Debug"
-		defines "BGFX_CONFIG_DEBUG=1"
 	filter "action:vs*"
 		defines "_CRT_SECURE_NO_WARNINGS"
 		excludes
@@ -175,6 +181,10 @@ project "bx"
 		path.join(BX_DIR, "3rdparty"),
 		path.join(BX_DIR, "include")
 	}
+	filter "configurations:Release"
+		defines "BX_CONFIG_DEBUG=0"
+	filter "configurations:Debug"
+		defines "BX_CONFIG_DEBUG=1"
 	filter "action:vs*"
 		defines "_CRT_SECURE_NO_WARNINGS"
 	setBxCompat()
@@ -191,7 +201,9 @@ project "glfw"
 		path.join(GLFW_DIR, "src/input.c"),
 		path.join(GLFW_DIR, "src/internal.h"),
 		path.join(GLFW_DIR, "src/monitor.c"),
+		path.join(GLFW_DIR, "src/null*.*"),
 		path.join(GLFW_DIR, "src/osmesa_context.*"),
+		path.join(GLFW_DIR, "src/platform.c"),
 		path.join(GLFW_DIR, "src/vulkan.c"),
 		path.join(GLFW_DIR, "src/window.c"),
 	}
